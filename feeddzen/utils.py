@@ -7,7 +7,7 @@ import time
 
 class memoize:
     """Decorator to cache returned value by a function
-    for `interval` seconds.
+    for `timeout` seconds.
     Functions' arguments are not taken into consideration.
 
     Example:
@@ -25,8 +25,8 @@ class memoize:
     3
     """
 
-    def __init__(self, interval):
-        self._interval = interval
+    def __init__(self, timeout):
+        self._timeout = timeout
         self._memo = (None, None)
 
     def __call__(self, func):
@@ -35,7 +35,7 @@ class memoize:
             # cache the returned value if
             # cache doesn't exist or cache expires
             if not self._memo[1] or \
-                    time.time() - self._memo[1] > self._interval:
+                    time.time() - self._memo[1] > self._timeout:
                 self._memo = (func(*args, **kwds), time.time())
             return self._memo[0]
         return wrapper
