@@ -8,8 +8,12 @@ from feeddzen import utils
 
 
 class ClockWidget(feeddzen.Widget):
+    """A clock widget"""
 
     def __init__(self, format, timeout):
+        """Arguments:
+        - `format` - see `man 3 strftime` for supported special characters
+        """
         super().__init__(format, timeout)
         self.define_update()
 
