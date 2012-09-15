@@ -3,8 +3,7 @@
 
 import time
 
-from feeddzen import feeddzen
-from feeddzen import utils
+from feeddzen import feeddzen, utils
 
 
 class ClockWidget(feeddzen.Widget):
