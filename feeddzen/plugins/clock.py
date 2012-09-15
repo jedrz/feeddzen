@@ -7,12 +7,12 @@ from feeddzen import feeddzen, utils
 
 
 class ClockWidget(feeddzen.Widget):
-    """A clock widget"""
+    """A clock widget.
+
+    See `man 3 strftime` for supported special characters.
+    """
 
     def __init__(self, timeout, template):
-        """Arguments:
-        - `template` - see `man 3 strftime` for supported special characters
-        """
         super().__init__(timeout, template)
         self.define_update()
 
