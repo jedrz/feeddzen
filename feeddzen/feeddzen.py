@@ -4,9 +4,9 @@
 
 class Widget:
 
-    def __init__(self, _format, timeout):
-        self.format = _format
+    def __init__(self, timeout, template):
         self.timeout = timeout
+        self.template = template
 
     def __str__(self):
         pass
