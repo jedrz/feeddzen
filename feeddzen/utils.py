@@ -52,14 +52,6 @@ class EventWithDelay(
 
 class CronLikeScheduler(sched.scheduler):
 
-    def __init__(self, timefunc, delayfunc, after_event_func):
-        """`after_event_func` is called after an event was executed.
-
-        A list of events is given to that function.
-        """
-        super().__init__(timefunc, delayfunc)
-        self.after_event_func = after_event_func
-
     def _enterabs(self, time, delay, priority, action, argument):
         """Enter a new event in the queue at the absolute time.
 
@@ -121,7 +113,5 @@ class CronLikeScheduler(sched.scheduler):
                     delayfunc(0)   # Let other threads run
                     # add the event again
                     self.enter(delay, priority, action, argument)
-                    # run the callback after executing the event
-                    self.after_event_func(self.queue)
                 else:
                     heapq.heappush(q, event)
