@@ -9,7 +9,6 @@ from feeddzen import feeddzen, utils
 
 
 class AlsaWidget(feeddzen.Widget):
-
     """Volume widget to use with alsa.
 
     Available special strings:
