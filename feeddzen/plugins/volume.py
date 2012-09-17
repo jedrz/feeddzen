@@ -3,6 +3,7 @@
 
 import re
 import subprocess
+import shlex
 
 from feeddzen import feeddzen, utils
 
@@ -32,10 +33,9 @@ class AlsaWidget(feeddzen.Widget):
         self.template_muted = template if template_muted is None \
             else template_muted
         # build amixer command
-        mixer_option = ['get', mixer]
-        card_option = ['-c', card]
-        device_option = ['-D', device]
-        self.amixer_command = ['amixer'] + card_option + device_option + mixer_option
+        amixer_command_format = 'amixer get {mixer} -c {card} -D {device}'
+        self.amixer_command = shlex.split(amixer_command_format.format(
+            mixer=mixer, card=card, device=device))
         self.define_update()
 
     def define_update(self):
