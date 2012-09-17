@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import time
+import subprocess
+import shlex
+
+from feeddzen import utils
+
 
 class Widget:
 
@@ -21,11 +27,29 @@ class StaticWidget:
         return self.text
 
 
-class FeedDzen:
+class Manager:
 
-    def __init__(self, plugins=[]):
-        self.plugins = plugins
+    def __init__(self, widgets=[], dzen_command='dzen2'):
+        self._scheduler = utils.CronLikeScheduler(time.time, time.sleep)
+        self.widgets = widgets
+        self._init_dzen(dzen_command)
+        self._init_events()
 
-    def __call__(self):
-        for plugin in plugins:
-            print(plugin)
+    def _init_dzen(self, dzen_command):
+        dzen_proc = subprocess.Popen(shlex.split(dzen_command),
+                                     stdin=subprocess.PIPE)
+        self._dzen_stdin = dzen_proc.stdin
+
+    def _init_events(self):
+        for widget in self.widgets:
+            if not isinstance(widget, StaticWidget):
+                self._scheduler.enter(
+                    widget.timeout, 1, self._print_status_bar, ())
+
+    def _print_status_bar(self):
+        status_bar = ''.join(str(w) for w in self.widgets) + '\n'
+        self._dzen_stdin.write(bytes(status_bar.encode('utf-8')))
+
+    def start(self):
+        self._print_status_bar()
+        self._scheduler.run()
