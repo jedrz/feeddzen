@@ -100,18 +100,12 @@ class CronLikeScheduler(sched.scheduler):
         pop = heapq.heappop
         push = heapq.heappush
         while q:
-            time, delay, priority, action, argument = checked_event = q[0]
+            time, delay, priority, action, argument = q[0]
             now = timefunc()
             if now < time:
                 delayfunc(time - now)
             else:
                 event = pop(q)
-                # Verify that the event was not removed or altered
-                # by another thread after we last looked at q[0].
-                if event is checked_event:
-                    action(*argument)
-                    delayfunc(0)   # Let other threads run
-                    # add the event again
-                    self.enter(delay, priority, action, argument)
-                else:
-                    heapq.heappush(q, event)
+                action(*argument)
+                # add the event again
+                self.enter(delay, priority, action, argument)
