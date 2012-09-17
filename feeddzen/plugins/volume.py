@@ -32,11 +32,10 @@ class AlsaWidget(feeddzen.Widget):
         self.template_muted = template if template_muted is None \
             else template_muted
         # build amixer command
-        self.mixer_option = ['get', mixer]
-        self.card_option = ['-c', card]
-        self.device_option = ['-D', device]
-        self.amixer_command = ['amixer'] + self.card_option + \
-            self.device_option + self.mixer_option
+        mixer_option = ['get', mixer]
+        card_option = ['-c', card]
+        device_option = ['-D', device]
+        self.amixer_command = ['amixer'] + card_option + device_option + mixer_option
         self.define_update()
 
     def define_update(self):
