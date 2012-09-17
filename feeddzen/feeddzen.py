@@ -9,7 +9,7 @@ class Widget:
         self.template = template
 
     def __str__(self):
-        pass
+        raise NotImplementedError
 
 
 class StaticWidget:
