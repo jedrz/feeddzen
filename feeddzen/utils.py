@@ -51,6 +51,14 @@ class EventWithDelay(
 
 
 class ContScheduler(sched.scheduler):
+    """A scheduler which doesn't drop executed events.
+
+    When an event is executed in `sched.scheduler`, is immediately
+    removed from the queue.
+    `ContScheduler` add again such an event to be executed later.
+    This enhancement needs modifying `sched.Event` by adding
+    another field - delay to compute time to run newly added event.
+    """
 
     def _enterabs(self, time, delay, priority, action, argument):
         """Enter a new event in the queue at the absolute time.
