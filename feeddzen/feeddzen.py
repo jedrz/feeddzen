@@ -30,7 +30,7 @@ class StaticWidget:
 class Manager:
 
     def __init__(self, widgets=[], dzen_command='dzen2'):
-        self._scheduler = utils.CronLikeScheduler(time.time, time.sleep)
+        self._scheduler = utils.ContScheduler(time.time, time.sleep)
         self.widgets = widgets
         self._init_dzen(dzen_command)
         self._init_events()

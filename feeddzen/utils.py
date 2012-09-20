@@ -50,7 +50,7 @@ class EventWithDelay(
     pass
 
 
-class CronLikeScheduler(sched.scheduler):
+class ContScheduler(sched.scheduler):
 
     def _enterabs(self, time, delay, priority, action, argument):
         """Enter a new event in the queue at the absolute time.
