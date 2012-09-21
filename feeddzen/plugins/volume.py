@@ -33,14 +33,14 @@ class AlsaWidget(feeddzen.Widget):
             else template_muted
         # build amixer command
         amixer_command_format = 'amixer get {mixer} -c {card} -D {device}'
-        self.amixer_command = shlex.split(amixer_command_format.format(
+        self._amixer_command = shlex.split(amixer_command_format.format(
             mixer=mixer, card=card, device=device))
         self.define_update()
 
     def define_update(self):
         @utils.memoize(self.timeout)
         def update():
-            output_bytes = subprocess.check_output(self.amixer_command)
+            output_bytes = subprocess.check_output(self._amixer_command)
             output = output_bytes.decode('utf-8')
             muted = self._rx_muted.search(output)
             volume = self._rx_volume.search(output).group()
