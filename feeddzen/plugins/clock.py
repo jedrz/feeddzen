@@ -14,9 +14,9 @@ class ClockWidget(feeddzen.Widget):
 
     def __init__(self, timeout, template):
         super().__init__(timeout, template)
-        self.define_update()
+        self._define_update()
 
-    def define_update(self):
+    def _define_update(self):
         @utils.memoize(self.timeout)
         def update():
             return time.strftime(self.template, time.localtime())

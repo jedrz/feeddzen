@@ -35,9 +35,9 @@ class AlsaWidget(feeddzen.Widget):
         amixer_command_format = 'amixer get {mixer} -c {card} -D {device}'
         self._amixer_command = shlex.split(amixer_command_format.format(
             mixer=mixer, card=card, device=device))
-        self.define_update()
+        self._define_update()
 
-    def define_update(self):
+    def _define_update(self):
         @utils.memoize(self.timeout)
         def update():
             output_bytes = subprocess.check_output(self._amixer_command)
