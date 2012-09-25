@@ -163,45 +163,43 @@ class BatteryWidget(feeddzen.Widget):
             try:
                 # open file with information we need
                 file_obj = open(self._bat_path.format(battery=self.bat_name))
-                s = file_obj.read()
             except IOError:
                 # FIXME: Maybe some logging would be better.
                 return 'ERROR'
+            s = file_obj.read()
+            file_obj.close()
+            matches = self._get_all_matches(s)
+            percentage = self._get_percentage(matches)
+            status = matches['status']
+            # The same calculations have to done when
+            # the battery is discharging or charging.
+            if status.lower().endswith('charging'):
+                remaining = self._get_remaining(matches)
+                hours, remainder = divmod(remaining, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                # Pass 'remaining' as an argument not to call
+                # _get_remaining method twice.
+                emptytime = self._get_emptytime(matches, remaining)
+                # Choose proper template.
+                template = getattr(self,
+                                   'template_{}'.format(status.lower()))
+                return template.format(
+                    percentage=percentage,
+                    hours=hours,
+                    minutes=minutes,
+                    seconds=seconds,
+                    hour_et=emptytime.hour,
+                    minute_et=emptytime.minute,
+                    second_et=emptytime.second)
             else:
-                matches = self._get_all_matches(s)
-                percentage = self._get_percentage(matches)
-                status = matches['status']
-                # The same calculations have to done when
-                # the battery is discharging or charging.
-                if status.lower().endswith('charging'):
-                    remaining = self._get_remaining(matches)
-                    hours, remainder = divmod(remaining, 3600)
-                    minutes, seconds = divmod(remainder, 60)
-                    # Pass 'remaining' as an argument not to call
-                    # _get_remaining method twice.
-                    emptytime = self._get_emptytime(matches, remaining)
-                    # Choose proper template.
-                    template = getattr(self,
-                                       'template_{}'.format(status.lower()))
-                    return template.format(
-                        percentage=percentage,
-                        hours=hours,
-                        minutes=minutes,
-                        seconds=seconds,
-                        hour_et=emptytime.hour,
-                        minute_et=emptytime.minute,
-                        second_et=emptytime.second)
-                else:
-                    return self.template.format(
-                        percentage=percentage,
-                        hours='',
-                        minutes='',
-                        seconds='',
-                        hour_et='',
-                        minute_et='',
-                        second_et='')
-            finally:
-                file_obj.close()
+                return self.template.format(
+                    percentage=percentage,
+                    hours='',
+                    minutes='',
+                    seconds='',
+                    hour_et='',
+                    minute_et='',
+                    second_et='')
         self.update = update
 
     def __str__(self):
