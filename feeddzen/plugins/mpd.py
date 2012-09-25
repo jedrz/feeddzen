@@ -6,10 +6,11 @@
 import subprocess
 import re
 
-from feeddzen import feeddzen, utils
+from .. import utils
+from .core import Widget
 
 
-class MPDWidgetMPC(feeddzen.Widget):
+class MPDWidgetMPC(Widget):
     """MPD widget using mpc.
 
     Possible delimiters to use:

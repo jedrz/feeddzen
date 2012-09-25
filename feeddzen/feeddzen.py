@@ -5,26 +5,8 @@ import time
 import subprocess
 import shlex
 
-from feeddzen import utils
-
-
-class Widget:
-
-    def __init__(self, timeout, template):
-        self.timeout = timeout
-        self.template = template
-
-    def __str__(self):
-        raise NotImplementedError
-
-
-class StaticWidget:
-
-    def __init__(self, text):
-        self.text = text
-
-    def __str__(self):
-        return self.text
+from . import utils
+from .plugins import StaticWidget
 
 
 class Manager:

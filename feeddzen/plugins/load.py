@@ -3,10 +3,11 @@
 
 import os
 
-from feeddzen import feeddzen, utils
+from .. import utils
+from .core import Widget
 
 
-class LoadWidget(feeddzen.Widget):
+class LoadWidget(Widget):
     """Average load widget.
 
     Available special delimeters:

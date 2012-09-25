@@ -5,10 +5,11 @@ import re
 import subprocess
 import shlex
 
-from feeddzen import feeddzen, utils
+from .. import utils
+from .core import Widget
 
 
-class AlsaWidget(feeddzen.Widget):
+class AlsaWidget(Widget):
     """Volume widget to use with alsa.
 
     Available special strings:

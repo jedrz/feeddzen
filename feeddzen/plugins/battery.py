@@ -4,10 +4,11 @@
 import re
 import datetime
 
-from feeddzen import feeddzen, utils
+from .. import utils
+from .core import Widget
 
 
-class BatteryWidget(feeddzen.Widget):
+class BatteryWidget(Widget):
     """Battery Widget.
 
     Infomation about battery is taken from

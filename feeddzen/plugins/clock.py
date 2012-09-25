@@ -3,10 +3,11 @@
 
 import time
 
-from feeddzen import feeddzen, utils
+from .. import utils
+from .core import Widget
 
 
-class ClockWidget(feeddzen.Widget):
+class ClockWidget(Widget):
     """A clock widget.
 
     See `man 3 strftime` for supported special characters.
