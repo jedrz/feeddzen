@@ -11,10 +11,10 @@ class LoadWidget(Widget):
     """Average load widget.
 
     Available special delimeters:
-    - `{load}` - average load over the last 1, 5, 15 minutes
-    - `{load1}` - average load over the last 1 minute
-    - `{load5}` - 5 minutes
-    - `{load15}` - 15 minutes
+    - '{load}' - average load over the last 1, 5, 15 minutes,
+    - '{load1}' - average load over the last 1 minute,
+    - '{load5}' - 5 minutes,
+    - '{load15}' - 15 minutes.
     """
 
     def __init__(self, timeout, template):

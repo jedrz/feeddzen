@@ -35,8 +35,8 @@ class memoize:
     def __call__(self, func):
         @functools.wraps(func)
         def wrapper(*args, **kwds):
-            # cache the returned value if
-            # cache doesn't exist or cache expires
+            # Cache the returned value if
+            # cache doesn't exist or expires.
             if not self._memo[1] or \
                     time.time() - self._memo[1] > self._timeout:
                 self._memo = (func(*args, **kwds), time.time())
@@ -63,7 +63,7 @@ class ContScheduler(sched.scheduler):
     def _enterabs(self, time, delay, priority, action, argument):
         """Enter a new event in the queue at the absolute time.
 
-        `delay` argument should be equal time - timefunc()
+        `delay` argument should be equal `time` - `timefunc()`
 
         Returns an ID for the event which can be used to remove it,
         if necessary.

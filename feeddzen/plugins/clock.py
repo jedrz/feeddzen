@@ -8,9 +8,9 @@ from .core import Widget
 
 
 class ClockWidget(Widget):
-    """A clock widget.
+    """Clock widget.
 
-    See `man 3 strftime` for supported special characters.
+    See `man 3 strftime` for supported delimiters
     """
 
     def __init__(self, timeout, template):

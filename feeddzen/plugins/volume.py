@@ -12,9 +12,10 @@ from .core import Widget
 class AlsaWidget(Widget):
     """Volume widget to use with alsa.
 
-    Available special strings:
-    - `{volume}` - percentage volume
-    - `{state}` - 'off' if mixer is muted or 'on'"""
+    Available special delimiters:
+    - '{volume}' - percentage volume,
+    - '{state}' - 'off' if mixer is muted or 'on'.
+    """
 
     _rx_volume = re.compile(r'(\d{1,3}%)')
     _rx_muted = re.compile(r'\[off\]')
@@ -22,17 +23,17 @@ class AlsaWidget(Widget):
     def __init__(self, timeout, template, template_muted=None,
                  mixer='Master', card='0', device='default'):
         """Arguments:
-        - `template` - is used when mixer is not muted
+        - `template` - is used when mixer is not muted,
         - `template_muted` - is used when mixer is muted, when is None,
-          equals `template`
-        - `mixer` - name of mixer, by default 'Master'
-        - `card` - card number, by default 0
-        - `device` - device id, by default 'default
+          equals `template`,
+        - `mixer` - name of the mixer, by default 'Master',
+        - `card` - card number, by default 0,
+        - `device` - device id, by default 'default.
         """
         super().__init__(timeout, template)
         self.template_muted = template if template_muted is None \
             else template_muted
-        # build amixer command
+        # Build amixer command.
         amixer_command_format = 'amixer get {mixer} -c {card} -D {device}'
         self._amixer_command = shlex.split(amixer_command_format.format(
             mixer=mixer, card=card, device=device))
