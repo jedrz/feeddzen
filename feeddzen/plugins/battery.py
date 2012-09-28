@@ -14,15 +14,20 @@ class BatteryWidget(BaseWidget):
     Infomation about battery is taken from
     /sys/class/power_supply/BAT_NUMBER/uevent file.
 
-    Supported special delimeters:
-    - '{percentage}' - estimated capacity of the battery in percentage
-    - '{hours}' - estimated hours to discharge or charge
-    - '{minutes}' - estimated minutes
-    - '{seconds}' - estimated seconds
-    - '{hour_et}' - estimated hour when the battery will be
-       discharged or charged
-    - '{minute_et}' - estimated minute
-    - '{second_et}' - estimated second
+    Arguments which will be passed to the function:
+    1. state - 'charging', 'discharging' or 'unknown'(?)
+       if battery is nor charging or discharging,
+    2. A dictionary with keys:
+       - 'percentage' - estimated capacity of the battery in percentage,
+       Only if battery is charging or discharging:
+       - 'hours' - estimated hours to discharge or charge,
+       - 'minutes' - estimated minutes,
+       - 'seconds' - estimated seconds,
+       - 'hour_et' - estimated hour when the battery will be,
+          discharged or charged,
+       - 'minute_et' - estimated minute,
+       - 'second_et' - estimated second.
+       and corresponding values.
     """
 
     _bat_path = '/sys/class/power_supply/{battery}/uevent'
