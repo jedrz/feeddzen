@@ -1,53 +1,68 @@
-#!/usr/bin/env python
+#!/USSR/bin/env python
 # -*- coding: utf-8 -*-
 
-# TODO: use some python library
+# TODO: Use some python library.
 
 import subprocess
 import re
 
 from .. import utils
-from .core import Widget
+from .core import BaseWidget
 
 
-class MPDWidgetMPC(Widget):
-    """MPD widget using mpc.
+class MPDWidgetMPC(BaseWidget):
+    """MPD widget using 'mpc'.
 
-    Possible delimiters to use:
-    - '%artist%' - Artist file tag,
-    - '%album%' - Album file tag,
-    - '%albumartist%' - Album Artist file tag,
-    - '%composer%' - Composer file tag,
-    - '%title%' - Title file tag,
-    - '%track%' - Track file tag,
-    - '%time%' - Duration of file,
-    - '%file%' - Path of file, relative to mpd's `music_directory` variable,
-    - '%position%' - Playlist track number.
-    (from mpc man page)
+    Arguments which will be passed to the function:
+    1. `True` if a song is playing, otherwise `False`,
+    2. A dictionary with keys:
+       - 'artist' - Artist file tag,
+       - 'album' - Album file tag,
+       - 'albumartist' - Album Artist file tag,
+       - 'composer' - Composer file tag,
+       - 'title' - Title file tag,
+       - 'track' - Track file tag,
+       - 'time' - Duration of file,
+       - 'file' - Path of file, relative to mpd's `music_directory` variable,
+       - 'position' - Playlist track number.
+      and corresponding values.
     """
 
-    def __init__(self, timeout, template, template_quiet=''):
-        """Arguments:
-        - `template` - is used when a song is playing,
-        - `template_quiet` - is used when no song is playing,
-          by default empty string.
-        """
-        super().__init__(timeout, template)
-        self.template_quiet = template_quiet
+    # List of possible delimiters which are recognised by 'mpc'.
+    _delimeters = (
+        '%artist%',
+        '%album%',
+        '%albumartist%',
+        '%composer%',
+        '%title%',
+        '%track%',
+        '%time%',
+        '%file%',
+        '%position%'
+    )
+    # Remove '%'.
+    _keys = tuple(d[1:-1] for d in _delimeters)
+    # 'mpc' command to get all tags. Delimiters are separated by '<>'
+    _mpc_command = ['mpc', '--format',  '<>'.join(_delimeters) + '<>']
+    # Regexp to capture one tag.
+    _rx_delimeter = re.compile('(.*?)<>')
+
+    def __init__(self, timeout, func):
+        super().__init__(timeout, func)
         self._define_update()
 
     def _define_update(self):
         @utils.memoize(self.timeout)
         def update():
-            # Command has to be defined every time because the template
-            # can be changed after init.
-            mpc_command = ['mpc', '--format', self.template]
-            output_bytes = subprocess.check_output(mpc_command)
+            output_bytes = subprocess.check_output(self._mpc_command)
             output = output_bytes.decode('utf-8').splitlines()
-            if len(output) == 1: # nothing is playing
-                return self.template_quiet
+            if len(output) == 1:   # nothing is playing
+                return self.func(False, None)
             else:
-                return output[0]
+                matches = {key: match for key, match in zip(
+                               self._keys,
+                               self._rx_delimeter.findall(output[0]))}
+                return self.func(True, matches)
         self.update = update
 
     def __str__(self):
