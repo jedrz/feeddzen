@@ -7,7 +7,7 @@ import time
 
 # If you would like to test this script without installing,
 # then uncomment below two lines and run it from directory where
-# setup.py file and feeddzen directory is located.
+# setup.py file and feeddzen directory are located.
 
 #import sys
 #sys.path.insert(0, os.path.abspath('.'))
