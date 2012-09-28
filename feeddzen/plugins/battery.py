@@ -5,20 +5,14 @@ import re
 import datetime
 
 from .. import utils
-from .core import Widget
+from .core import BaseWidget
 
 
-class BatteryWidget(Widget):
+class BatteryWidget(BaseWidget):
     """Battery Widget.
 
     Infomation about battery is taken from
     /sys/class/power_supply/BAT_NUMBER/uevent file.
-
-    Several templates can be used according to the current state
-    of the battery to print proper kind of information:
-    - `template_discharging`,
-    - `template_charging`,
-    - `template`.
 
     Supported special delimeters:
     - '{percentage}' - estimated capacity of the battery in percentage
@@ -48,14 +42,8 @@ class BatteryWidget(Widget):
     _rx_voltage_now = re.compile(r'POWER_SUPPLY_VOLTAGE_NOW=(\d+)')
     _rx_status = re.compile(r'POWER_SUPPLY_STATUS=(\w+)')
 
-    def __init__(self, timeout, template, template_discharging=None,
-                 template_charging=None, bat_name='BAT0', full_design=True):
+    def __init__(self, timeout, func, bat_name='BAT0', full_design=True):
         """Arguments:
-        - `template` - is used when the battery is not discharging or charging,
-        - `template_discharging` - the battery is discharging, if None
-          then `template` is used,
-        - `template_charging` - the battery is charging, if None
-          then `template` is used,
         - `bat_name` - the name of battery, by default BAT0,
         - `full_design` - whether to use full design or real values
           of the capacity of the battery. If your battery is worn
@@ -63,11 +51,7 @@ class BatteryWidget(Widget):
           you will get lower than 100% the percentage value.
           Set the variable to False if you don't like it.
         """
-        super().__init__(timeout, template)
-        self.template_discharging = \
-            template if template_discharging is None else template_discharging
-        self.template_charging = \
-            template if template_charging is None else template_charging
+        super().__init__(timeout, func)
         self.bat_name = bat_name
         self.full_design = full_design
         self._define_update()
@@ -108,8 +92,8 @@ class BatteryWidget(Widget):
         design = matches['charge_{}'.format(full)] \
             or  matches['energy_{}'.format(full)]
         percentage = present / design * 100.0
-        # Change accuracy and and percent sign.
-        return '{:.2f}%'.format(percentage)
+        # I suppose such an 'accuracy' is not needed.
+        return round(percentage, 2)
 
     def _get_remaining(self, matches):
         """Return seconds to get fully discharged or charged battery.
@@ -171,36 +155,35 @@ class BatteryWidget(Widget):
             file_obj.close()
             matches = self._get_all_matches(s)
             percentage = self._get_percentage(matches)
-            status = matches['status']
+            status = matches['status'].lower()
             # The same calculations have to done when
             # the battery is discharging or charging.
-            if status.lower().endswith('charging'):
+            if status.endswith('charging'):
                 remaining = self._get_remaining(matches)
                 hours, remainder = divmod(remaining, 3600)
                 minutes, seconds = divmod(remainder, 60)
                 # Pass 'remaining' as an argument not to call
                 # _get_remaining method twice.
                 emptytime = self._get_emptytime(matches, remaining)
-                # Choose proper template.
-                template = getattr(self,
-                                   'template_{}'.format(status.lower()))
-                return template.format(
-                    percentage=percentage,
-                    hours=hours,
-                    minutes=minutes,
-                    seconds=seconds,
-                    hour_et=emptytime.hour,
-                    minute_et=emptytime.minute,
-                    second_et=emptytime.second)
+                # FIXME: Instead of hours, minutes, ... a datetime object
+                # would be better?
+                return self.func(
+                    status, {
+                        'percentage': percentage,
+                        'hours': hours,
+                        'minutes': minutes,
+                        'seconds': seconds,
+                        'hour_et': emptytime.hour,
+                        'minute_et': emptytime.minute,
+                        'second_et': emptytime.second
+                    }
+                )
             else:
-                return self.template.format(
-                    percentage=percentage,
-                    hours='',
-                    minutes='',
-                    seconds='',
-                    hour_et='',
-                    minute_et='',
-                    second_et='')
+                return self.func(
+                    status, {
+                        'percentage': percentage
+                    }
+                )
         self.update = update
 
     def __str__(self):
