@@ -6,33 +6,30 @@ import subprocess
 import shlex
 
 from .. import utils
-from .core import Widget
+from .core import BaseWidget
 
 
-class AlsaWidget(Widget):
+class AlsaWidget(BaseWidget):
     """Volume widget to use with alsa.
 
-    Available special delimiters:
-    - '{volume}' - percentage volume,
-    - '{state}' - 'off' if mixer is muted or 'on'.
+    'amixer' command is used to get some information.
+
+    Arguments which will be passed to function:
+    1. volume - `int` type, current volume as percentage value,
+    2. state - `True` if mixer is muted `False` otherwise.
     """
 
-    _rx_volume = re.compile(r'(\d{1,3}%)')
+    _rx_volume = re.compile(r'(\d{1,3})%')
     _rx_muted = re.compile(r'\[off\]')
 
-    def __init__(self, timeout, template, template_muted=None,
+    def __init__(self, timeout, func,
                  mixer='Master', card='0', device='default'):
         """Arguments:
-        - `template` - is used when mixer is not muted,
-        - `template_muted` - is used when mixer is muted, when is None,
-          equals `template`,
         - `mixer` - name of the mixer, by default 'Master',
         - `card` - card number, by default 0,
         - `device` - device id, by default 'default.
         """
-        super().__init__(timeout, template)
-        self.template_muted = template if template_muted is None \
-            else template_muted
+        super().__init__(timeout, func)
         # Build amixer command.
         amixer_command_format = 'amixer get {mixer} -c {card} -D {device}'
         self._amixer_command = shlex.split(amixer_command_format.format(
@@ -44,12 +41,9 @@ class AlsaWidget(Widget):
         def update():
             output_bytes = subprocess.check_output(self._amixer_command)
             output = output_bytes.decode('utf-8')
-            muted = self._rx_muted.search(output)
-            volume = self._rx_volume.search(output).group()
-            if muted:
-                return self.template_muted.format(volume=volume, state='off')
-            else:
-                return self.template.format(volume=volume, state='on')
+            volume = self._rx_volume.search(output).group(1)
+            muted = bool(self._rx_muted.search(output))
+            return self.func(volume, muted)
         self.update = update
 
     def __str__(self):

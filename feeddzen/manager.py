@@ -6,7 +6,7 @@ import subprocess
 import shlex
 
 from . import utils
-from .plugins import StaticWidget
+from .plugins.core import StaticWidget
 
 
 class Manager:
