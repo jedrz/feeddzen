@@ -2,6 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import locale
+import os
+import time
+
+# If you would like to test this script without installing,
+# then uncomment below two lines and run it from directory where
+# setup.py file and feeddzen directory is located.
+
+#import sys
+#sys.path.insert(0, os.path.abspath('.'))
 
 from feeddzen.manager import Manager
 from feeddzen.plugins import *    # Import all plugins
@@ -12,41 +21,54 @@ from feeddzen.plugins import *    # Import all plugins
 
 # Create widgets.
 # separator
-sep = StaticWidget(' << ')
+sep = core.StaticWidget(' << ')
+
 # clock widget
-clock_w = ClockWidget(
-    60,    # timeout
-    # Preferred template. To see supported characters see `man 3 strftime`.
-    # Obviously you can also use dzen2' commands such as ^fg(), ^i, etc.
-    '^fg(#fff)%a, %d %b %Y, %H:%M:%S^fg()')
+def clock_f():
+    return time.strftime('%a, %d %b %Y, %H:%M:%S')
+clock_w = core.Widget(60,      # timeout
+                      clock_f) # function which result should be send to dzen
+
 # alsa widget
-volume_w = AlsaWidget(
-    55,
-    '^fg(#fff)Vol: {volume} [{state}]^fg()',    # Channel isn't muted
-    '^fg(#fff)Vol: 0%^fg()')                    # Channel is muted
+def vol_f(volume, muted):
+    state = 'off' if muted else 'on'
+    return 'Vol: {}% [{}]'.format(volume, state)
+vol_w = volume.AlsaWidget(40, vol_f)
+
 # battery widget
-bat_w = BatteryWidget(43,
-                      # Battery is not charging nor discharging.
-                      'BAT: {percentage}',
-                      # Battery is discharging.
-                      'DCH: ^fg(#f99){percentage}^fg() [{hours}:{minutes}:{seconds}]',
-                      # Battery is charging, I want to know when it will
-                      # be fully charged.
-                      'CHR: {percentage} [{hour_et}:{minute_et}]')
+def bat_f(state, d):
+    if state == 'charging':
+        return 'BAT: {percentage}% [{hours}:{minutes}:{seconds}]'.format(**d)
+    elif state == 'discharging':
+        return '^fg(#fff)BAT: {percentage}% [{hours}:{minutes}:{seconds}]^fg()'.format(**d)
+    else:
+        return 'BAT: {percentage}%'.format(**d)
+bat_w = battery.BatteryWidget(61, bat_f)
+
 # load widget
-load_w = LoadWidget(5 * 60, 'Load: {load5} {load15}')
+def load_f():
+    load = os.getloadavg()
+    load1 = load[0]
+    load5 = load[1]
+    load15 = load[2]
+    return 'Load: {} {} {}'.format(load1, load5, load15)
+load_w = core.Widget(97, load_f)
+
 # mpd widget
-# mpd_w = MPDWidgetMPC(30,
-#                      'MPD: %artist% - %title%',
-#                      'MPD: stop')
+#def mpd_f(playing, d):
+#    if playing:
+#        return 'MPD: {artist} - {title}'.format(**d)
+#    else:
+#        return 'MPD: stop'
+#mpd_w = mpd.MPDWidgetMPC(35, mpd_f)
 
 # Create a list of widgets.
 # The first item will placed at left side.
 widgets = [
     load_w, sep,
-    # mpd_w, sep,
+    #mpd_w, sep,
     bat_w, sep,
-    volume_w, sep,
+    vol_w, sep,
     clock_w
 ]
 
