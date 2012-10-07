@@ -14,6 +14,7 @@ class memoize:
     Functions' arguments are not taken into consideration.
 
     Example:
+
     >>> import time
     >>> @memoize(1)
     ... def func(arg):
@@ -53,11 +54,13 @@ class EventWithDelay(
 class ContScheduler(sched.scheduler):
     """A scheduler which doesn't drop executed events.
 
-    When an event is executed in `sched.scheduler`, is immediately
+    When an event is executed in `sched.scheduler`_, is immediately
     removed from the queue.
     `ContScheduler` add again such an event to be executed later.
     This enhancement needs modifying `sched.Event` by adding
     another field - delay to compute time to run newly added event.
+
+    .. _sched.scheduler: http://docs.python.org/py3k/library/sched.html
     """
 
     def _enterabs(self, time, delay, priority, action, argument):
