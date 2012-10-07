@@ -5,7 +5,14 @@ from .. import utils
 
 
 class BaseWidget:
-    """Simple class to build widget upon it"""
+    """Simple class to build widgets upon it.
+
+    .. tip::
+       Have a look at `Widget` class for the simplest example.
+
+    :param timeout: a number of seconds for storing the same result of `func`
+    :param func: a function which result should be sent to dzen
+    """
 
     def __init__(self, timeout, func):
         self.timeout = timeout
@@ -16,7 +23,10 @@ class BaseWidget:
 
 
 class StaticWidget:
-    """Static widget to just print passed string"""
+    """Static widget to just print passed string.
+
+    :param text: text to print
+    """
 
     def __init__(self, text):
         self.text = text
@@ -28,16 +38,16 @@ class StaticWidget:
 class Widget(BaseWidget):
     """Widget which call `func` without any arguments.
 
-    Also `func` value is cached for `timeout` seconds.
+    The result returned by `func` is cached for `timeout` seconds.
 
     Example usage - clock widget - it doesn't need any input.
+    ::
 
-    import time
-    def clock_func():
-        return time.strftime('%a, %d %b %Y, %H:%M')
-    # Cache returned value every 60 seconds.
-    clock_widget = SimpleWidget(60, clock_func)
-    # That's all.
+        import time
+        def clock_func():
+            return time.strftime('%a, %d %b %Y, %H:%M')
+        # Cache returned value every 60 seconds.
+        clock_widget = Widget(60, clock_func)
     """
 
     def __init__(self, timeout, func):
