@@ -11,21 +11,22 @@ from .core import BaseWidget
 
 
 class MPDWidgetMPC(BaseWidget):
-    """MPD widget using 'mpc'.
+    """MPD widget using *mpc* to get info.
 
     Arguments which will be passed to the function:
+
     1. `True` if a song is playing, otherwise `False`,
     2. A dictionary with keys:
-       - 'artist' - Artist file tag,
-       - 'album' - Album file tag,
-       - 'albumartist' - Album Artist file tag,
-       - 'composer' - Composer file tag,
-       - 'title' - Title file tag,
-       - 'track' - Track file tag,
-       - 'time' - Duration of file,
-       - 'file' - Path of file, relative to mpd's `music_directory` variable,
-       - 'position' - Playlist track number.
-      and corresponding values.
+
+       - `'artist'` - artist file tag,
+       - `'album'` - album file tag,
+       - `'albumartist'` - album Artist file tag,
+       - `'composer'` - composer file tag,
+       - `'title'` - title file tag,
+       - `'track'` - track file tag,
+       - `'time'` - duration of file,
+       - `'file'` - path of file,
+       - `'position'` - playlist track number.
     """
 
     # List of possible delimiters which are recognised by 'mpc'.
@@ -56,7 +57,7 @@ class MPDWidgetMPC(BaseWidget):
         def update():
             output_bytes = subprocess.check_output(self._mpc_command)
             output = output_bytes.decode('utf-8').splitlines()
-            if len(output) == 1:   # nothing is playing
+            if len(output) == 1:    # nothing is playing
                 return self.func(False, None)
             else:
                 matches = {key: match for key, match in zip(
