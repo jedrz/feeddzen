@@ -12,22 +12,31 @@ class BatteryWidget(BaseWidget):
     """Battery Widget.
 
     Infomation about battery is taken from
-    /sys/class/power_supply/BAT_NUMBER/uevent file.
+    ``/sys/class/power_supply/BAT_NUMBER/uevent`` file.
 
     Arguments which will be passed to the function:
-    1. state - 'charging', 'discharging' or 'unknown'(?)
-       if battery is nor charging or discharging,
+
+    1. state - a string, *charging*, *discharging*, *full* or *unknown*.
     2. A dictionary with keys:
-       - 'percentage' - estimated capacity of the battery in percentage,
+
+       - `'percentage'` - estimated capacity of the battery in percentage.
+
        Only if battery is charging or discharging:
-       - 'hours' - estimated hours to discharge or charge,
-       - 'minutes' - estimated minutes,
-       - 'seconds' - estimated seconds,
-       - 'hour_et' - estimated hour when the battery will be,
-          discharged or charged,
-       - 'minute_et' - estimated minute,
-       - 'second_et' - estimated second.
-       and corresponding values.
+
+       - `'hours'` - estimated hours to discharge or charge,
+       - `'minutes'` - estimated minutes,
+       - `'seconds'` - estimated seconds,
+       - `'hour_et'` - estimated hour when the battery will be discharged
+         or charged,
+       - `'minute_et'` - estimated minute,
+       - `'second_et'` - estimated second.
+
+    :param bat_name: battery identifier, replaces *BAT_NUMBER* in the above path.
+    :param full_design: specify whether full design battery values should
+     be used to compute the capacity. If your battery is worn out
+     and `full_design` is `True` (which by default is) then you will probably
+     get lower than 100% the capacity value. Pass `False` if you don't
+     like this behaviour.
     """
 
     _bat_path = '/sys/class/power_supply/{battery}/uevent'
@@ -48,14 +57,6 @@ class BatteryWidget(BaseWidget):
     _rx_status = re.compile(r'POWER_SUPPLY_STATUS=(\w+)')
 
     def __init__(self, timeout, func, bat_name='BAT0', full_design=True):
-        """Arguments:
-        - `bat_name` - the name of battery, by default BAT0,
-        - `full_design` - whether to use full design or real values
-          of the capacity of the battery. If your battery is worn
-          and full_design is True (which by default is) then
-          you will get lower than 100% the percentage value.
-          Set the variable to False if you don't like it.
-        """
         super().__init__(timeout, func)
         self.bat_name = bat_name
         self.full_design = full_design
@@ -64,12 +65,13 @@ class BatteryWidget(BaseWidget):
     def _get_all_matches(self, s):
         """Return a dictionary with all regexp matches.
 
-        The result looks like:
-        {'charge_full': int(self._rx_charge_full.search(s).group(1))
-                        if ...search(s) is not None else None
-        ...}
+        The result looks like::
 
-        Beginning '_rx_' is stripped in keys.
+            {'charge_full': int(self._rx_charge_full.search(s).group(1))
+                            if ...search(s) is not None else None
+            ...}
+
+        Beginning *_rx_* are stripped in keys.
         """
         d = {}
         for attr in dir(self):
@@ -86,9 +88,10 @@ class BatteryWidget(BaseWidget):
         return d
 
     def _get_percentage(self, matches):
-        """Return estimated capacity of battery as percentage (str).
+        """Return estimated capacity of battery as percentage.
 
-        `matches` - a dictionary returned by `_get_all_matches`.
+        :param matches: a dictionary returned by `_get_all_matches`.
+        :rtype: integer
         """
         full = 'full_design' if self.full_design else 'full'
         # Try to use CHARGE_NOW and CHARGE_FULL firstly if they are present,
@@ -105,7 +108,8 @@ class BatteryWidget(BaseWidget):
 
         The returned value is only an *approximation*.
 
-        `matches` - a dictionary returned by `_get_all_matches`.
+        :param matches: a dictionary returned by `_get_all_matches`.
+        :rtype: integer
         """
         full = 'full_design' if self.full_design else 'full'
         status = matches['status']
@@ -129,7 +133,7 @@ class BatteryWidget(BaseWidget):
             remaining_seconds = int((charge_full - charge_now) \
                 * 3600 / current_now)
             return remaining_seconds
-        else:   # there is nothing to measure
+        else:    # There is nothing to measure
             return None
 
     def _get_emptytime(self, matches, remaining=None):
@@ -137,8 +141,8 @@ class BatteryWidget(BaseWidget):
 
         A `datetime.datetime` object is returned with *estimated* time.
 
-        `matches` - a dictionary returned by `_get_all_matches`,
-        `remaining` - remaining seconds to discharge.
+        :param matches: a dictionary returned by `_get_all_matches`.
+        :param remaining: remaining seconds to discharge or charge.
         """
         remaining = remaining or self._get_remaining(matches)
         if remaining:
@@ -151,7 +155,7 @@ class BatteryWidget(BaseWidget):
         @utils.memoize(self.timeout)
         def update():
             try:
-                # open file with information we need
+                # Open file with information we need.
                 file_obj = open(self._bat_path.format(battery=self.bat_name))
             except IOError:
                 # FIXME: Maybe some logging would be better.
