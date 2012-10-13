@@ -1,0 +1,346 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to feeddzen’s documentation! &mdash; feeddzen 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="feeddzen 0.0.1 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">feeddzen 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-feeddzen-s-documentation">
+<h1>Welcome to feeddzen&#8217;s documentation!<a class="headerlink" href="#welcome-to-feeddzen-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<span class="target" id="module-feeddzen.manager"></span><dl class="class">
+<dt id="feeddzen.manager.Manager">
+<em class="property">class </em><tt class="descclassname">feeddzen.manager.</tt><tt class="descname">Manager</tt><big>(</big><em>widgets=</em><span class="optional">[</span><span class="optional">]</span>, <em>dzen_command='dzen2'</em><big>)</big><a class="headerlink" href="#feeddzen.manager.Manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manager for plugins and dzen process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>widgets</strong> &#8211; a list of widgets to display in dzen</li>
+<li><strong>dzen_command</strong> &#8211; a command to invoke dzen</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="feeddzen.manager.Manager.start">
+<tt class="descname">start</tt><big>(</big><big>)</big><a class="headerlink" href="#feeddzen.manager.Manager.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run scheduler and start sending data to dzen.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-feeddzen.plugins.core"></span><dl class="class">
+<dt id="feeddzen.plugins.core.BaseWidget">
+<em class="property">class </em><tt class="descclassname">feeddzen.plugins.core.</tt><tt class="descname">BaseWidget</tt><big>(</big><em>timeout</em>, <em>func</em><big>)</big><a class="headerlink" href="#feeddzen.plugins.core.BaseWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple class to build widgets upon it.</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">Have a look at <cite>Widget</cite> class for the simplest example.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>timeout</strong> &#8211; a number of seconds for storing the same result of <cite>func</cite></li>
+<li><strong>func</strong> &#8211; a function which result should be sent to dzen</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="feeddzen.plugins.core.StaticWidget">
+<em class="property">class </em><tt class="descclassname">feeddzen.plugins.core.</tt><tt class="descname">StaticWidget</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#feeddzen.plugins.core.StaticWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static widget to just print passed string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> &#8211; text to print</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="feeddzen.plugins.core.Widget">
+<em class="property">class </em><tt class="descclassname">feeddzen.plugins.core.</tt><tt class="descname">Widget</tt><big>(</big><em>timeout</em>, <em>func</em><big>)</big><a class="headerlink" href="#feeddzen.plugins.core.Widget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Widget which call <cite>func</cite> without any arguments.</p>
+<p>The result returned by <cite>func</cite> is cached for <cite>timeout</cite> seconds.</p>
+<p>Example usage - clock widget - it doesn&#8217;t need any input.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">time</span>
+<span class="k">def</span> <span class="nf">clock_func</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%a, </span><span class="si">%d</span><span class="s"> %b %Y, %H:%M&#39;</span><span class="p">)</span>
+<span class="c"># Cache returned value every 60 seconds.</span>
+<span class="n">clock_widget</span> <span class="o">=</span> <span class="n">Widget</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="n">clock_func</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<span class="target" id="module-feeddzen.plugins.battery"></span><dl class="class">
+<dt id="feeddzen.plugins.battery.BatteryWidget">
+<em class="property">class </em><tt class="descclassname">feeddzen.plugins.battery.</tt><tt class="descname">BatteryWidget</tt><big>(</big><em>timeout</em>, <em>func</em>, <em>bat_name='BAT0'</em>, <em>full_design=True</em><big>)</big><a class="headerlink" href="#feeddzen.plugins.battery.BatteryWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Battery Widget.</p>
+<p>Infomation about battery is taken from
+<tt class="docutils literal"><span class="pre">/sys/class/power_supply/BAT_NUMBER/uevent</span></tt> file.</p>
+<p>Arguments which will be passed to the function:</p>
+<ol class="arabic">
+<li><p class="first">state - a string, <em>charging</em>, <em>discharging</em>, <em>full</em> or <em>unknown</em>.</p>
+</li>
+<li><p class="first">A dictionary with keys:</p>
+<ul class="simple">
+<li><cite>&#8216;percentage&#8217;</cite> - estimated capacity of the battery in percentage.</li>
+</ul>
+<p>Only if battery is charging or discharging:</p>
+<ul class="simple">
+<li><cite>&#8216;hours&#8217;</cite> - estimated hours to discharge or charge,</li>
+<li><cite>&#8216;minutes&#8217;</cite> - estimated minutes,</li>
+<li><cite>&#8216;seconds&#8217;</cite> - estimated seconds,</li>
+<li><cite>&#8216;hour_et&#8217;</cite> - estimated hour when the battery will be discharged
+or charged,</li>
+<li><cite>&#8216;minute_et&#8217;</cite> - estimated minute,</li>
+<li><cite>&#8216;second_et&#8217;</cite> - estimated second.</li>
+</ul>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bat_name</strong> &#8211; battery identifier, replaces <em>BAT_NUMBER</em> in the above path.</li>
+<li><strong>full_design</strong> &#8211; specify whether full design battery values should
+be used to compute the capacity. If your battery is worn out
+and <cite>full_design</cite> is <cite>True</cite> (which by default is) then you will probably
+get lower than 100% the capacity value. Pass <cite>False</cite> if you don&#8217;t
+like this behaviour.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-feeddzen.plugins.mpd"></span><dl class="class">
+<dt id="feeddzen.plugins.mpd.MPDWidgetMPC">
+<em class="property">class </em><tt class="descclassname">feeddzen.plugins.mpd.</tt><tt class="descname">MPDWidgetMPC</tt><big>(</big><em>timeout</em>, <em>func</em><big>)</big><a class="headerlink" href="#feeddzen.plugins.mpd.MPDWidgetMPC" title="Permalink to this definition">¶</a></dt>
+<dd><p>MPD widget using <em>mpc</em> to get info.</p>
+<p>Arguments which will be passed to the function:</p>
+<ol class="arabic simple">
+<li><cite>True</cite> if a song is playing, otherwise <cite>False</cite>,</li>
+<li>A dictionary with keys:<ul>
+<li><cite>&#8216;artist&#8217;</cite> - artist file tag,</li>
+<li><cite>&#8216;album&#8217;</cite> - album file tag,</li>
+<li><cite>&#8216;albumartist&#8217;</cite> - album Artist file tag,</li>
+<li><cite>&#8216;composer&#8217;</cite> - composer file tag,</li>
+<li><cite>&#8216;title&#8217;</cite> - title file tag,</li>
+<li><cite>&#8216;track&#8217;</cite> - track file tag,</li>
+<li><cite>&#8216;time&#8217;</cite> - duration of file,</li>
+<li><cite>&#8216;file&#8217;</cite> - path of file,</li>
+<li><cite>&#8216;position&#8217;</cite> - playlist track number.</li>
+</ul>
+</li>
+</ol>
+</dd></dl>
+
+<span class="target" id="module-feeddzen.plugins.volume"></span><dl class="class">
+<dt id="feeddzen.plugins.volume.AlsaWidget">
+<em class="property">class </em><tt class="descclassname">feeddzen.plugins.volume.</tt><tt class="descname">AlsaWidget</tt><big>(</big><em>timeout</em>, <em>func</em>, <em>mixer='Master'</em>, <em>card='0'</em>, <em>device='default'</em><big>)</big><a class="headerlink" href="#feeddzen.plugins.volume.AlsaWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Volume widget to use with alsa.</p>
+<p><em>amixer</em> command is used to get some information.</p>
+<p>Arguments which will be passed to function:</p>
+<ol class="arabic simple">
+<li>volume - <em>integer</em>, current volume as percentage value,</li>
+<li>state - <cite>True</cite> if mixer is muted <cite>False</cite> otherwise.</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mixer</strong> &#8211; name of the mixer, by default <cite>&#8216;Master&#8217;</cite>.</li>
+<li><strong>card</strong> &#8211; card number, by default 0.</li>
+<li><strong>device</strong> &#8211; device id, by default <cite>&#8216;default&#8217;</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-feeddzen.utils"></span><dl class="class">
+<dt id="feeddzen.utils.ContScheduler">
+<em class="property">class </em><tt class="descclassname">feeddzen.utils.</tt><tt class="descname">ContScheduler</tt><big>(</big><em>timefunc</em>, <em>delayfunc</em><big>)</big><a class="headerlink" href="#feeddzen.utils.ContScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>A scheduler which doesn&#8217;t drop executed events.</p>
+<p>When an event is executed in <a class="reference external" href="http://docs.python.org/py3k/library/sched.html">sched.scheduler</a>, is immediately
+removed from the queue.
+<cite>ContScheduler</cite> add again such an event to be executed later.
+This enhancement needs modifying <cite>sched.Event</cite> by adding
+another field - delay to compute time to run newly added event.</p>
+<dl class="method">
+<dt id="feeddzen.utils.ContScheduler.enter">
+<tt class="descname">enter</tt><big>(</big><em>delay</em>, <em>priority</em>, <em>action</em>, <em>argument</em><big>)</big><a class="headerlink" href="#feeddzen.utils.ContScheduler.enter" title="Permalink to this definition">¶</a></dt>
+<dd><p>A variant that specifies the time as a relative time.</p>
+<p>This is actually the more commonly used interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="feeddzen.utils.ContScheduler.enterabs">
+<tt class="descname">enterabs</tt><big>(</big><em>time</em>, <em>priority</em>, <em>action</em>, <em>argument</em><big>)</big><a class="headerlink" href="#feeddzen.utils.ContScheduler.enterabs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enter a new event in the queue at an absolute time.</p>
+<p>Returns an ID for the event which can be used to remove it,
+if necessary.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="feeddzen.utils.ContScheduler.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#feeddzen.utils.ContScheduler.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the first event in the queue and add it again.</p>
+<p>When there is a positive delay until the first event, the
+delay function is called and the event is left in the queue;
+otherwise, the event is removed from the queue and executed
+(its action function is called, passing it the argument).
+Then the event is added again to the queue. If
+the delay function returns prematurely, it is simply
+restarted.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="feeddzen.utils.memoize">
+<em class="property">class </em><tt class="descclassname">feeddzen.utils.</tt><tt class="descname">memoize</tt><big>(</big><em>timeout</em><big>)</big><a class="headerlink" href="#feeddzen.utils.memoize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to cache returned value by a function
+for <cite>timeout</cite> seconds.
+Functions&#8217; arguments are not taken into consideration.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">time</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@memoize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">arg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="c"># should print 1</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c"># should print 3</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to feeddzen&#8217;s documentation!</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">feeddzen 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Łukasz Jędrzejewski.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

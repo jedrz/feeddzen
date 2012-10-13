@@ -1,0 +1,39 @@
+.. feeddzen documentation master file, created by
+   sphinx-quickstart on Thu Oct  4 23:00:42 2012.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to feeddzen's documentation!
+====================================
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+.. automodule:: feeddzen.manager
+   :members:
+
+.. automodule:: feeddzen.plugins.core
+   :members:
+
+.. automodule:: feeddzen.plugins.battery
+   :members:
+
+.. automodule:: feeddzen.plugins.mpd
+   :members:
+
+.. automodule:: feeddzen.plugins.volume
+   :members:
+
+.. automodule:: feeddzen.utils
+   :members:
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
