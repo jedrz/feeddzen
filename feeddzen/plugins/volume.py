@@ -12,11 +12,16 @@ from .core import BaseWidget
 class AlsaWidget(BaseWidget):
     """Volume widget to use with alsa.
 
-    'amixer' command is used to get some information.
+    *amixer* command is used to get some information.
 
     Arguments which will be passed to function:
-    1. volume - `int` type, current volume as percentage value,
+
+    1. volume - *integer*, current volume as percentage value,
     2. state - `True` if mixer is muted `False` otherwise.
+
+    :param mixer: name of the mixer, by default `'Master'`.
+    :param card: card number, by default 0.
+    :param device: device id, by default `'default'`.
     """
 
     _rx_volume = re.compile(r'(\d{1,3})%')
@@ -24,11 +29,6 @@ class AlsaWidget(BaseWidget):
 
     def __init__(self, timeout, func,
                  mixer='Master', card='0', device='default'):
-        """Arguments:
-        - `mixer` - name of the mixer, by default 'Master',
-        - `card` - card number, by default 0,
-        - `device` - device id, by default 'default.
-        """
         super().__init__(timeout, func)
         # Build amixer command.
         amixer_command_format = 'amixer get {mixer} -c {card} -D {device}'
