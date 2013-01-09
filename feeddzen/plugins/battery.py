@@ -203,8 +203,6 @@ class BatteryWidget(BaseWidget):
                 # _get_remaining method twice.
                 remaining_time = self._get_remaining_time(matches, remaining)
                 empty_time = self._get_empty_time(matches, remaining)
-                # FIXME: Instead of hours, minutes, ... a datetime object
-                # would be better?
                 return self.func(
                     status, {
                         'percentage': percentage,
