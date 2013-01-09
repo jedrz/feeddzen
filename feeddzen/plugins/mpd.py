@@ -60,9 +60,12 @@ class MPDWidgetMPC(BaseWidget):
             if len(output) == 1:    # nothing is playing
                 return self.func(False, None)
             else:
-                matches = {key: match for key, match in zip(
-                               self._keys,
-                               self._rx_delimeter.findall(output[0]))}
+                matches = {
+                    key: match
+                    for key, match in zip(
+                        self._keys,
+                        self._rx_delimeter.findall(output[0]))
+                }
                 return self.func(True, matches)
         self.update = update
 
