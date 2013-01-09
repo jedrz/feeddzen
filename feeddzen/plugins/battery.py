@@ -136,6 +136,21 @@ class BatteryWidget(BaseWidget):
         else:    # There is nothing to measure
             return None
 
+    def _get_remaining_time(self, matches, remaining=None):
+        """Return remaining time to get fully discharged or charged battery.
+
+        A tuple - (hours, minutes, seconds) is returned
+
+        :param matches: a dictionary returned by `_get_all_matches`.
+        :param remaining: remaining seconds to discharge or charge.
+        """
+        remaining = remaining or self._get_remaining(matches)
+        if remaining:
+            hours, remainder = divmod(remaining, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            return (hours, minutes, seconds)
+        return None
+
     def _get_emptytime(self, matches, remaining=None):
         """Return time when the battery will be fully charged or discharged.
 
@@ -169,19 +184,18 @@ class BatteryWidget(BaseWidget):
             # the battery is discharging or charging.
             if status.endswith('charging'):
                 remaining = self._get_remaining(matches)
-                hours, remainder = divmod(remaining, 3600)
-                minutes, seconds = divmod(remainder, 60)
                 # Pass 'remaining' as an argument not to call
                 # _get_remaining method twice.
+                remaining_time = self._get_remaining_time(matches, remaining)
                 emptytime = self._get_emptytime(matches, remaining)
                 # FIXME: Instead of hours, minutes, ... a datetime object
                 # would be better?
                 return self.func(
                     status, {
                         'percentage': percentage,
-                        'hours': hours,
-                        'minutes': minutes,
-                        'seconds': seconds,
+                        'hours': remaining_time[0],
+                        'minutes': remaining_time[1],
+                        'seconds': remaining_time[2],
                         'hour_et': emptytime.hour,
                         'minute_et': emptytime.minute,
                         'second_et': emptytime.second
