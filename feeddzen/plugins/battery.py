@@ -31,7 +31,8 @@ class BatteryWidget(BaseWidget):
        - `'minute_et'` - estimated minute,
        - `'second_et'` - estimated second.
 
-    :param bat_name: battery identifier, replaces *BAT_NUMBER* in the above path.
+    :param bat_name: battery identifier, replaces *BAT_NUMBER* in the above
+     path.
     :param full_design: specify whether full design battery values should
      be used to compute the capacity. If your battery is worn out
      and `full_design` is `True` (which by default is) then you will probably
@@ -82,7 +83,7 @@ class BatteryWidget(BaseWidget):
         for attr in dir(self):
             if attr.startswith('_rx_'):
                 match = getattr(self, attr).search(s)
-                name = attr[4:] # strip '_rx_'
+                name = attr[4:]  # strip '_rx_'
                 match_res = match.group(1) if match else None
                 # If match result is digit then convert it to integer
                 # otherwise return as it is.
@@ -103,7 +104,7 @@ class BatteryWidget(BaseWidget):
         # if not then use ENERGY_*.
         present = matches['charge_now'] or matches['energy_now']
         design = matches['charge_{}'.format(full)] \
-            or  matches['energy_{}'.format(full)]
+            or matches['energy_{}'.format(full)]
         percentage = present / design * 100.0
         # I suppose such an 'accuracy' is not needed.
         return round(percentage, 2)
@@ -135,8 +136,8 @@ class BatteryWidget(BaseWidget):
                     matches['energy_{}'.format(full)] / matches['voltage_now']
             # `charge_full` - `charge_now` is the remaining capacity
             # for fully charged battery.
-            remaining_seconds = int((charge_full - charge_now) \
-                * 3600 / current_now)
+            remaining_seconds = int((charge_full - charge_now)
+                                    * 3600 / current_now)
             return remaining_seconds
         else:    # There is nothing to measure
             return None
