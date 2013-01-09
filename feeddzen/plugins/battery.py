@@ -139,7 +139,7 @@ class BatteryWidget(BaseWidget):
     def _get_remaining_time(self, matches, remaining=None):
         """Return remaining time to get fully discharged or charged battery.
 
-        A tuple - (hours, minutes, seconds) is returned
+        A tuple - (hours, minutes, seconds) is returned.
 
         :param matches: a dictionary returned by `_get_all_matches`.
         :param remaining: remaining seconds to discharge or charge.
@@ -151,20 +151,22 @@ class BatteryWidget(BaseWidget):
             return (hours, minutes, seconds)
         return None
 
-    def _get_emptytime(self, matches, remaining=None):
+    def _get_empty_time(self, matches, remaining=None):
         """Return time when the battery will be fully charged or discharged.
 
-        A `datetime.datetime` object is returned with *estimated* time.
+        A tuple - (hours, minutes, seconds) is returned. I assume it will
+        take no longer than one day.
 
         :param matches: a dictionary returned by `_get_all_matches`.
         :param remaining: remaining seconds to discharge or charge.
+
         """
         remaining = remaining or self._get_remaining(matches)
         if remaining:
             delta = datetime.timedelta(seconds=remaining)
             date = datetime.datetime.now() + delta
-            return date
-        return remaining
+            return (date.hour, date.minute, date.second)
+        return None
 
     def _define_update(self):
         @utils.memoize(self.timeout)
@@ -187,7 +189,7 @@ class BatteryWidget(BaseWidget):
                 # Pass 'remaining' as an argument not to call
                 # _get_remaining method twice.
                 remaining_time = self._get_remaining_time(matches, remaining)
-                emptytime = self._get_emptytime(matches, remaining)
+                empty_time = self._get_empty_time(matches, remaining)
                 # FIXME: Instead of hours, minutes, ... a datetime object
                 # would be better?
                 return self.func(
@@ -196,9 +198,9 @@ class BatteryWidget(BaseWidget):
                         'hours': remaining_time[0],
                         'minutes': remaining_time[1],
                         'seconds': remaining_time[2],
-                        'hour_et': emptytime.hour,
-                        'minute_et': emptytime.minute,
-                        'second_et': emptytime.second
+                        'hour_et': empty_time[0],
+                        'minute_et': empty_time[1],
+                        'second_et': empty_time[2]
                     }
                 )
             else:
