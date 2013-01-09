@@ -37,6 +37,9 @@ class BatteryWidget(BaseWidget):
      and `full_design` is `True` (which by default is) then you will probably
      get lower than 100% the capacity value. Pass `False` if you don't
      like this behaviour.
+    :param time_as_string: controls time type returned. If is `True` then
+     time is filled with zeros and return as string otherwise an integers
+     are returned.
     """
 
     _bat_path = '/sys/class/power_supply/{battery}/uevent'
@@ -56,10 +59,12 @@ class BatteryWidget(BaseWidget):
     _rx_voltage_now = re.compile(r'POWER_SUPPLY_VOLTAGE_NOW=(\d+)')
     _rx_status = re.compile(r'POWER_SUPPLY_STATUS=(\w+)')
 
-    def __init__(self, timeout, func, bat_name='BAT0', full_design=True):
+    def __init__(self, timeout, func, bat_name='BAT0', full_design=True,
+                 time_as_string=True):
         super().__init__(timeout, func)
         self.bat_name = bat_name
         self.full_design = full_design
+        self.time_as_string = time_as_string
         self._define_update()
 
     def _get_all_matches(self, s):
@@ -148,7 +153,11 @@ class BatteryWidget(BaseWidget):
         if remaining:
             hours, remainder = divmod(remaining, 3600)
             minutes, seconds = divmod(remainder, 60)
-            return (hours, minutes, seconds)
+            if self.time_as_string:
+                return tuple('{:02d}'.format(n)
+                             for n in (hours, minutes, seconds))
+            else:
+                return (hours, minutes, seconds)
         return None
 
     def _get_empty_time(self, matches, remaining=None):
@@ -165,7 +174,11 @@ class BatteryWidget(BaseWidget):
         if remaining:
             delta = datetime.timedelta(seconds=remaining)
             date = datetime.datetime.now() + delta
-            return (date.hour, date.minute, date.second)
+            if self.time_as_string:
+                return tuple('{:02d}'.format(n)
+                             for n in (date.hour, date.minute, date.second))
+            else:
+                return (date.hour, date.minute, date.second)
         return None
 
     def _define_update(self):
